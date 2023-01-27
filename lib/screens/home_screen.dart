@@ -12,56 +12,59 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  bool _isExpanded = false;
   int _selectedWorkout = -1;
 
   @override
   Widget build(BuildContext context) {
     final workoutsProvider = Provider.of<WorkoutsProvider>(context);
     final exercisesProvider = Provider.of<ExercisesProvider>(context);
+
     return Scaffold(
       appBar: AppBar(
-        title: Text('Home'),
+        title: const Text('Home'),
       ),
-      body: Container(
-        child: ListView.builder(
-          itemCount: 2,
-          itemBuilder: (context, index) {
-            return Card(
-              child: Column(
-                children: <Widget>[
-                  ListTile(
-                    title: Text(workoutsProvider.workouts[index].name),
-                    onTap: () {
-                      setState(() {
-                        _isExpanded = !_isExpanded;
-                        _selectedWorkout = index;
-                      });
-                    },
-                  ),
-                  AnimatedContainer(
-                    duration: Duration(milliseconds: 500),
-                    height:
-                        _isExpanded && _selectedWorkout == index ? null : 0.0,
-                    child: _isExpanded && _selectedWorkout == index
-                        ? ListView.builder(
-                            itemCount: exercisesProvider.exercises.length,
-                            itemBuilder: (context, index) {
-                              return ListTile(
-                                title: Text(
-                                    exercisesProvider.exercises[index].name),
-                                subtitle: Text(exercisesProvider
-                                    .exercises[index].description),
-                              );
-                            },
+      body: ListView.builder(
+        itemCount: 2,
+        itemBuilder: (context, index) {
+          return GestureDetector(
+            onTap: () {
+              setState(() {
+                _selectedWorkout = _selectedWorkout == index ? -1 : index;
+              });
+            },
+            child: AnimatedContainer(
+              duration: const Duration(milliseconds: 300),
+              curve: Curves.easeInOut,
+              height: _selectedWorkout == index
+                  ? MediaQuery.of(context).size.height - kToolbarHeight
+                  : 100,
+              child: Card(
+                child: Column(
+                  children: <Widget>[
+                    ListTile(
+                      title: Text(workoutsProvider.workouts[index].name),
+                    ),
+                    _selectedWorkout == index
+                        ? Flexible(
+                            child: ListView.builder(
+                              itemCount: exercisesProvider.exercises.length,
+                              itemBuilder: (context, exerciseIndex) {
+                                return ListTile(
+                                  title: Text(exercisesProvider
+                                      .exercises[exerciseIndex].name),
+                                  subtitle: Text(exercisesProvider
+                                      .exercises[exerciseIndex].description),
+                                );
+                              },
+                            ),
                           )
-                        : null,
-                  ),
-                ],
+                        : Container(),
+                  ],
+                ),
               ),
-            );
-          },
-        ),
+            ),
+          );
+        },
       ),
     );
   }

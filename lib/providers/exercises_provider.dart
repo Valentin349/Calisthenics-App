@@ -11,7 +11,7 @@ class Exercise {
 }
 
 class ExercisesProvider with ChangeNotifier {
-  List<Exercise> _exercises = [
+  final List<Exercise> _exercises = [
     Exercise(name: 'Exercise 1', description: 'Description for exercise 1'),
     Exercise(name: 'Exercise 2', description: 'Description for exercise 2'),
   ];
