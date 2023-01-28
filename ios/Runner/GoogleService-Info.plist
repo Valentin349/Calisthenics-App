@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>1009150970690-7hr7tt3if5680gkb38t3bpaojcf7iov3.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.1009150970690-7hr7tt3if5680gkb38t3bpaojcf7iov3</string>
+	<key>API_KEY</key>
+	<string>AIzaSyDCNVAa4CE0co6ssiY7GhCZzjRnpB20h-g</string>
+	<key>GCM_SENDER_ID</key>
+	<string>1009150970690</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.example.calisthenicsApp</string>
+	<key>PROJECT_ID</key>
+	<string>calisthenics-app-6d03f</string>
+	<key>STORAGE_BUCKET</key>
+	<string>calisthenics-app-6d03f.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:1009150970690:ios:13bc2c339b11ada73fd6db</string>
+</dict>
+</plist>
