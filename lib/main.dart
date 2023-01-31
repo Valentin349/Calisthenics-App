@@ -19,8 +19,7 @@ Future<void> main() async {
   try {
     await FirebaseAuth.instance.useAuthEmulator('localhost', 9099);
   } catch (e) {
-    // ignore: avoid_print
-    print(e);
+    debugPrint('auth error: $e');
   }
   runApp(const MyApp());
 }
@@ -45,10 +44,18 @@ class MyApp extends StatelessWidget {
           body: StreamBuilder<User?>(
               stream: FirebaseAuth.instance.authStateChanges(),
               builder: (context, snapshot) {
-                if (snapshot.hasData) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                } else if (snapshot.hasError) {
+                  return const Center(
+                    child: Text('Something went wrong!'),
+                  );
+                } else if (snapshot.hasData) {
                   return const HomeScreen();
                 } else {
-                  return LoginWidget();
+                  return const LoginWidget();
                 }
               }),
         ),
