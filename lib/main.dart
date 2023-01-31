@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -7,17 +8,25 @@ import 'firebase_options.dart';
 import 'screens/home_screen.dart';
 import 'providers/workouts_provider.dart';
 import 'providers/exercises_provider.dart';
+import 'widgets/login_widget.dart';
 
-void main() {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(MyApp());
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
+  try {
+    await FirebaseAuth.instance.useAuthEmulator('localhost', 9099);
+  } catch (e) {
+    // ignore: avoid_print
+    print(e);
+  }
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  MyApp({super.key});
-  final Future<FirebaseApp> _fbApp = Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -32,20 +41,16 @@ class MyApp extends StatelessWidget {
           primarySwatch: Colors.blue,
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
-        home: FutureBuilder(
-          future: _fbApp,
-          builder: (context, snapshot) {
-            if (snapshot.hasError) {
-              print('Error Occured! ${snapshot.error.toString()}');
-              return const Text("Something went wrong");
-            } else if (snapshot.hasData) {
-              return const HomeScreen();
-            } else {
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-            }
-          },
+        home: Scaffold(
+          body: StreamBuilder<User?>(
+              stream: FirebaseAuth.instance.authStateChanges(),
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  return const HomeScreen();
+                } else {
+                  return LoginWidget();
+                }
+              }),
         ),
       ),
     );
