@@ -1,9 +1,22 @@
-const functions = require("firebase-functions");
+import functions from "firebase-functions";
+import { Configuration, OpenAIApi } from "openai";
 
-// // Create and deploy your first functions
-// // https://firebase.google.com/docs/functions/get-started
-//
-// exports.helloWorld = functions.https.onRequest((request, response) => {
-//   functions.logger.info("Hello logs!", {structuredData: true});
-//   response.send("Hello from Firebase!");
-// });
+
+const configuration = new Configuration({
+  apiKey: functions.config().openai.secret,
+});
+const openAi = new OpenAIApi(configuration);
+
+async function getGPT3Response() {
+    const response = await openAi.createCompletion({
+        model: "text-davinci-003",
+        prompt: "say this is a test",
+        temperature: 0.7,
+        max_tokens: 100,
+        top_p: 1,
+        frequency_penalty: 0,
+        presence_penalty: 0,
+      });
+
+    return response;
+}
