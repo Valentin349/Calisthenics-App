@@ -1,19 +1,20 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:email_validator/email_validator.dart';
 
-class LoginWidget extends StatefulWidget {
-  final VoidCallback onClickedSignUp;
+class SignUpWidget extends StatefulWidget {
+  final VoidCallback onClickedLogin;
 
-  const LoginWidget({
+  const SignUpWidget({
     Key? key,
-    required this.onClickedSignUp,
+    required this.onClickedLogin,
   }) : super(key: key);
 
   @override
-  State<LoginWidget> createState() => _LoginWidgetState();
+  State<SignUpWidget> createState() => _SignUpWidgetState();
 }
 
-class _LoginWidgetState extends State<LoginWidget> {
+class _SignUpWidgetState extends State<SignUpWidget> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
@@ -35,20 +36,29 @@ class _LoginWidgetState extends State<LoginWidget> {
           const SizedBox(
             height: 40,
           ),
-          TextField(
+          TextFormField(
             controller: emailController,
             cursorColor: Colors.white,
             textInputAction: TextInputAction.next,
             decoration: const InputDecoration(label: Text('email')),
+            autovalidateMode: AutovalidateMode.onUserInteraction,
+            validator: (email) =>
+                email != null && !EmailValidator.validate(email)
+                    ? 'Enter a vaild Email'
+                    : null,
           ),
           const SizedBox(
             height: 4,
           ),
-          TextField(
+          TextFormField(
             controller: passwordController,
             textInputAction: TextInputAction.done,
             decoration: const InputDecoration(label: Text('password')),
             obscureText: true,
+            autovalidateMode: AutovalidateMode.onUserInteraction,
+            validator: (value) => value != null && value.length < 6
+                ? 'Enter min. 6 characters'
+                : null,
           ),
           const SizedBox(
             height: 20,
@@ -62,20 +72,20 @@ class _LoginWidgetState extends State<LoginWidget> {
               size: 32,
             ),
             label: const Text(
-              'Log In',
+              'Create Account',
               style: TextStyle(fontSize: 24),
             ),
-            onPressed: signIn,
+            onPressed: signUp,
           ),
           ElevatedButton(
-              onPressed: () => widget.onClickedSignUp(),
-              child: const Text('Create Account'))
+              onPressed: () => widget.onClickedLogin(),
+              child: const Text('Login'))
         ],
       ),
     );
   }
 
-  Future signIn() async {
+  Future signUp() async {
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -85,7 +95,7 @@ class _LoginWidgetState extends State<LoginWidget> {
     );
 
     try {
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
+      await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: emailController.text.trim(),
         password: passwordController.text.trim(),
       );

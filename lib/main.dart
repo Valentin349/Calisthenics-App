@@ -1,20 +1,22 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
-
+import 'screens/authentication_screen.dart';
 import 'screens/home_screen.dart';
 import 'providers/workouts_provider.dart';
 import 'providers/exercises_provider.dart';
-import 'widgets/login_widget.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  try {
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+  } catch (e) {
+    debugPrint('Firebase init error: $e');
+  }
 
   try {
     await FirebaseAuth.instance.useAuthEmulator('localhost', 9099);
@@ -55,7 +57,7 @@ class MyApp extends StatelessWidget {
                 } else if (snapshot.hasData) {
                   return const HomeScreen();
                 } else {
-                  return const LoginWidget();
+                  return const AuthenticationScreen();
                 }
               }),
         ),
