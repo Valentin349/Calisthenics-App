@@ -2,7 +2,7 @@ import 'package:calisthenics_app/utils.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-import '../screens/forgot_password_screen.dart';
+import '../screens/authentication/forgot_password_screen.dart';
 
 class LoginWidget extends StatefulWidget {
   final VoidCallback onClickedSignUp;
