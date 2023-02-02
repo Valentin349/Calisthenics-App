@@ -1,5 +1,8 @@
+import 'package:calisthenics_app/utils.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+
+import '../screens/forgot_password_screen.dart';
 
 class LoginWidget extends StatefulWidget {
   final VoidCallback onClickedSignUp;
@@ -67,6 +70,23 @@ class _LoginWidgetState extends State<LoginWidget> {
             ),
             onPressed: signIn,
           ),
+          const SizedBox(
+            height: 20,
+          ),
+          GestureDetector(
+            child: Text(
+              'Forgot Password?',
+              style: TextStyle(
+                  decoration: TextDecoration.underline,
+                  color: Theme.of(context).colorScheme.secondary,
+                  fontSize: 20),
+            ),
+            onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => const ForgotPasswordScreen())),
+          ),
+          const SizedBox(
+            height: 20,
+          ),
           ElevatedButton(
               onPressed: () => widget.onClickedSignUp(),
               child: const Text('Create Account'))
@@ -92,6 +112,8 @@ class _LoginWidgetState extends State<LoginWidget> {
     } on FirebaseAuthException catch (e) {
       debugPrint('Failed with code: ${e.code}');
       debugPrint(e.message);
+
+      Utils.showSnackBar(e.message);
     }
 
     if (mounted) Navigator.of(context).pop(context);

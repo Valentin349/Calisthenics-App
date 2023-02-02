@@ -3,10 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
+import 'screens/verify_email_screen.dart';
 import 'screens/authentication_screen.dart';
 import 'screens/home_screen.dart';
 import 'providers/workouts_provider.dart';
 import 'providers/exercises_provider.dart';
+import 'utils.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -37,6 +39,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => ExercisesProvider()),
       ],
       child: MaterialApp(
+        scaffoldMessengerKey: Utils.messengerKey,
         title: 'Fitness App',
         theme: ThemeData(
           primarySwatch: Colors.blue,
@@ -55,7 +58,7 @@ class MyApp extends StatelessWidget {
                     child: Text('Something went wrong!'),
                   );
                 } else if (snapshot.hasData) {
-                  return const HomeScreen();
+                  return const VerifyEmailScreen();
                 } else {
                   return const AuthenticationScreen();
                 }
