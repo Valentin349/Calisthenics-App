@@ -1,3 +1,4 @@
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -46,9 +47,19 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               label: const Text('Sign out')),
           _createExpandBoxWidgets(workoutsProvider, exercisesProvider),
+          ElevatedButton(
+              onPressed: getGPT3Data, child: const Text('create Workout')),
         ],
       ),
     );
+  }
+
+  Future getGPT3Data() async {
+    var res = await FirebaseFunctions.instance
+        .httpsCallable('createWorkout')
+        .call(null);
+
+    debugPrint(res.data.toString());
   }
 
   Widget _createExpandBoxWidgets(
