@@ -54,12 +54,13 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Future getGPT3Data() async {
-    var res = await FirebaseFunctions.instance
-        .httpsCallable('createWorkout')
-        .call(null);
-
-    debugPrint(res.data.toString());
+  Future<void> getGPT3Data() async {
+    HttpsCallable callable =
+        FirebaseFunctions.instance.httpsCallable('createWorkout');
+    final results = await callable.call(<String, dynamic>{
+      'text': 'Create a calisthenics workout',
+    });
+    debugPrint(results.data.toString());
   }
 
   Widget _createExpandBoxWidgets(
