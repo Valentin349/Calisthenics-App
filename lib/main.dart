@@ -1,6 +1,5 @@
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -31,12 +30,6 @@ Future<void> main() async {
     FirebaseFunctions.instance.useFunctionsEmulator('localhost', 5001);
   } catch (e) {
     debugPrint('Functions error: $e');
-  }
-
-  try {
-    FirebaseDatabase.instance.useDatabaseEmulator('localhost', 9000);
-  } catch (e) {
-    debugPrint('Database error: $e');
   }
   runApp(const MyApp());
 }
