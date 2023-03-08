@@ -1,1 +1,1 @@
-{"user":{"Age":"","Dietary_requirements":"","Dips":"","Goal":"","Injuries":"","Meal":"","PullUps":"","PushUps":"","workout":""}}
+{"Diet":"","Exercises":"","Users":{"id":{"Age":0,"Dips":0,"Goal":"","PullUps":0,"PushUps":0,"Workout_Id":0}},"Workouts":{"id":{"Exerises":[{"Exercise_Id":0,"Reps":0,"Set_Rest":0,"Sets":0}]}}}

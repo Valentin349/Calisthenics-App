@@ -33,11 +33,6 @@ Future<void> main() async {
     debugPrint('Functions error: $e');
   }
 
-  try {
-    FirebaseDatabase.instance.useDatabaseEmulator('localhost', 9000);
-  } catch (e) {
-    debugPrint('Database error: $e');
-  }
   runApp(const MyApp());
 }
 
