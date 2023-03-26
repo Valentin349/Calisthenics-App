@@ -54,6 +54,7 @@ class DefaultFirebaseOptions {
     appId: '1:1009150970690:android:d855c7c556ed11393fd6db',
     messagingSenderId: '1009150970690',
     projectId: 'calisthenics-app-6d03f',
+    databaseURL: 'https://calisthenics-app-6d03f-default-rtdb.firebaseio.com',
     storageBucket: 'calisthenics-app-6d03f.appspot.com',
   );
 
@@ -62,6 +63,7 @@ class DefaultFirebaseOptions {
     appId: '1:1009150970690:ios:13bc2c339b11ada73fd6db',
     messagingSenderId: '1009150970690',
     projectId: 'calisthenics-app-6d03f',
+    databaseURL: 'https://calisthenics-app-6d03f-default-rtdb.firebaseio.com',
     storageBucket: 'calisthenics-app-6d03f.appspot.com',
     iosClientId: '1009150970690-7hr7tt3if5680gkb38t3bpaojcf7iov3.apps.googleusercontent.com',
     iosBundleId: 'com.example.calisthenicsApp',
