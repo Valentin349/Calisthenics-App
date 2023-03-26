@@ -1,9 +1,7 @@
 import 'dart:async';
-
-import '../home_screen.dart';
+import 'package:calisthenics_app/screens/create_profile_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-
 import '../../utils.dart';
 
 class VerifyEmailScreen extends StatefulWidget {
@@ -44,7 +42,7 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
 
   @override
   Widget build(BuildContext context) => isEmailVerified
-      ? const HomeScreen()
+      ? const CreateProfileScreen()
       : Scaffold(
           appBar: AppBar(
             title: const Text('Verify Email'),

@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -30,6 +31,12 @@ Future<void> main() async {
     FirebaseFunctions.instance.useFunctionsEmulator('localhost', 5001);
   } catch (e) {
     debugPrint('Functions error: $e');
+  }
+
+  try {
+    FirebaseFirestore.instance.useFirestoreEmulator('localhost', 8080);
+  } catch (e) {
+    debugPrint('firestore error: $e');
   }
   runApp(const MyApp());
 }
