@@ -1,5 +1,6 @@
 import 'package:calisthenics_app/screens/home_screen.dart';
 import 'package:calisthenics_app/utils.dart';
+import 'package:calisthenics_app/widgets/wheel_picker_widget.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -47,7 +48,14 @@ class _CreateProfileScreen extends State<CreateProfileScreen> {
                 formKey: formKey,
                 textController: usernameController,
                 label: 'username',
-                callback: createUser,
+                callback: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => WheelPickerWidget(
+                                callback: createUser,
+                              )));
+                },
               );
             }
           }),
