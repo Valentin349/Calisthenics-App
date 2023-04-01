@@ -4,6 +4,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
+import '../widgets/text_button_input_widget.dart';
+
 class CreateProfileScreen extends StatefulWidget {
   const CreateProfileScreen({super.key});
 
@@ -28,65 +30,36 @@ class _CreateProfileScreen extends State<CreateProfileScreen> {
   }
 
   @override
-  void initState() {
-    super.initState();
-
-    checkUserExists();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return isUserCreated
-        ? const HomeScreen()
-        : Form(
-            key: formKey,
-            child: Padding(
-              padding: const EdgeInsets.all(24.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const SizedBox(
-                    height: 40,
-                  ),
-                  TextFormField(
-                    controller: usernameController,
-                    textInputAction: TextInputAction.done,
-                    decoration: const InputDecoration(label: Text('Username')),
-                    autovalidateMode: AutovalidateMode.onUserInteraction,
-                    validator: (value) => value != null && value.length < 3
-                        ? 'Enter min. 3 characters'
-                        : null,
-                  ),
-                  const SizedBox(
-                    height: 4,
-                  ),
-                  ElevatedButton.icon(
-                    style: ElevatedButton.styleFrom(
-                      minimumSize: const Size.fromHeight(50),
-                    ),
-                    icon: const Icon(
-                      Icons.arrow_right_outlined,
-                      size: 32,
-                    ),
-                    label: const Text(
-                      'Next',
-                      style: TextStyle(fontSize: 24),
-                    ),
-                    onPressed: createUser,
-                  ),
-                ],
-              ),
-            ),
-          );
+    return Center(
+      child: FutureBuilder(
+          future: checkUserExists(),
+          builder: (context, snapshot) {
+            debugPrint(snapshot.connectionState.toString());
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const CircularProgressIndicator();
+            } else if (snapshot.hasError) {
+              return Text(snapshot.error.toString());
+            } else if (snapshot.hasData) {
+              return const HomeScreen();
+            } else {
+              return TextButtonFormWidget(
+                formKey: formKey,
+                textController: usernameController,
+                label: 'username',
+                callback: createUser,
+              );
+            }
+          }),
+    );
   }
 
   Future checkUserExists() async {
     final snapshot = await users.doc(userID).get();
     if (snapshot.exists) {
-      setState(() {
-        isUserCreated = true;
-      });
+      return true;
     }
+    return null;
   }
 
   void createUser() {
