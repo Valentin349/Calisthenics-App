@@ -15,7 +15,13 @@ class CreateProfileScreen extends StatefulWidget {
 }
 
 class _CreateProfileScreen extends State<CreateProfileScreen> {
+  final _navigatorKey = GlobalKey<NavigatorState>();
+
   final usernameController = TextEditingController();
+  int pushUpsController = 0;
+  int pullUpsController = 0;
+  int dipsController = 0;
+  int squatsController = 0;
   final formKey = GlobalKey<FormState>();
 
   CollectionReference users = FirebaseFirestore.instance.collection('users');
@@ -44,18 +50,10 @@ class _CreateProfileScreen extends State<CreateProfileScreen> {
             } else if (snapshot.hasData) {
               return const HomeScreen();
             } else {
-              return TextButtonFormWidget(
-                formKey: formKey,
-                textController: usernameController,
-                label: 'username',
-                callback: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => WheelPickerWidget(
-                                callback: createUser,
-                              )));
-                },
+              return Navigator(
+                key: _navigatorKey,
+                initialRoute: 'username',
+                onGenerateRoute: _onGenerateRoute,
               );
             }
           }),
@@ -70,10 +68,23 @@ class _CreateProfileScreen extends State<CreateProfileScreen> {
     return null;
   }
 
+  Future checkUsernameAvailable() async {
+    final isValid = formKey.currentState!.validate();
+
+    if (isValid) {
+      final username = usernameController.text.trim();
+      final query = users.where('username', isEqualTo: username);
+
+      final snapshot = await query.get();
+      if (snapshot.docs.isEmpty) {
+        return true;
+      } else {
+        Utils.showSnackBar('Username already taken.');
+      }
+    }
+  }
+
   void createUser() {
-    // TO-DO : make more efficient so user doesnt keep making database
-    // real calls, can potentially retrieve all data once and check
-    // local copy if username is contained
     final isValid = formKey.currentState!.validate();
 
     if (isValid) {
@@ -87,21 +98,125 @@ class _CreateProfileScreen extends State<CreateProfileScreen> {
                 userReference
                     .set({
                       'username': username,
-                      'age': 21,
-                      'workouts': 1,
+                      'PushUps': pushUpsController,
+                      'Dips': pushUpsController,
+                      'PullUps': pushUpsController,
+                      'Squats': pushUpsController,
                     })
-                    .then((snapshot) => {
-                          setState(() {
-                            isUserCreated = true;
-                          }),
-                          debugPrint('added user to database')
-                        })
+                    .then(
+                      (snapshot) => {
+                        setState(() {
+                          isUserCreated = true;
+                        }),
+                        debugPrint('added user to database'),
+                      },
+                    )
                     .catchError(
-                        (error) => {debugPrint('Failed to add user: $error')})
+                      (error) => {debugPrint('Failed to add user: $error')},
+                    ),
               }
             else
-              {Utils.showSnackBar('Username already taken.')}
+              {
+                Utils.showSnackBar('Username already taken.'),
+              }
           });
     }
+  }
+
+  void _onUsernameCreated() {
+    checkUsernameAvailable().then((value) => {
+          if (value) {_navigatorKey.currentState!.pushNamed('pushupsPage')}
+        });
+  }
+
+  void _onPushupsSelected(int index) {
+    _navigatorKey.currentState!.pushNamed('dipsPage');
+  }
+
+  void _onDipsSelected(int index) {
+    _navigatorKey.currentState!.pushNamed('pullupsPage');
+  }
+
+  void _onPullupsSelected(int index) {
+    _navigatorKey.currentState!.pushNamed('squatsPage');
+  }
+
+  void _onSquatsSelected(int index) {
+    createUser();
+  }
+
+  Route _onGenerateRoute(RouteSettings settings) {
+    late Widget page;
+    switch (settings.name) {
+      case 'username':
+        page = TextButtonFormWidget(
+          formKey: formKey,
+          textController: usernameController,
+          label: 'username',
+          callback: _onUsernameCreated,
+        );
+        break;
+      case 'pushupsPage':
+        page = WheelPickerWidget(
+          items: const [
+            '0-5',
+            '5-10',
+            '10-15',
+            '15-20',
+            '20-25',
+            '25-30',
+            '30+'
+          ],
+          titleText: 'How many pushups can you do?',
+          callback: _onPushupsSelected,
+          backButton: true,
+        );
+        break;
+      case 'dipsPage':
+        page = WheelPickerWidget(
+          items: const [
+            '0-5',
+            '5-10',
+            '10-15',
+            '15-20',
+            '20-25',
+            '25-30',
+            '30+'
+          ],
+          titleText: 'How many dips can you do?',
+          callback: _onDipsSelected,
+          backButton: true,
+        );
+        break;
+      case 'pullupsPage':
+        page = WheelPickerWidget(
+          items: const [
+            '0-5',
+            '5-10',
+            '10-15',
+            '15-20',
+            '20-25',
+            '25+',
+          ],
+          titleText: 'How many pullups can you do?',
+          callback: _onPullupsSelected,
+          backButton: true,
+        );
+        break;
+      case 'squatsPage':
+        page = WheelPickerWidget(
+          items: const ['0-10', '10-20', '20-30', '30-40', '40-50', '50+'],
+          titleText: 'How many squats can you do?',
+          callback: _onSquatsSelected,
+          backButton: true,
+        );
+        break;
+    }
+    return MaterialPageRoute(
+      builder: (context) {
+        return page;
+      },
+      settings: settings,
+    );
   }
 }
