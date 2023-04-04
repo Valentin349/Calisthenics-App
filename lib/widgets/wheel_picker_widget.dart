@@ -2,15 +2,17 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class WheelPickerWidget extends StatefulWidget {
-  final void Function(int) callback;
+  final VoidCallback callback;
   final String titleText;
   final List items;
+  final CupertinoTabController controller;
   final bool? backButton;
 
   const WheelPickerWidget({
     Key? key,
     required this.titleText,
     required this.items,
+    required this.controller,
     required this.callback,
     required this.backButton,
   }) : super(key: key);
@@ -20,8 +22,6 @@ class WheelPickerWidget extends StatefulWidget {
 }
 
 class _WheelPickerWidget extends State<WheelPickerWidget> {
-  int index = 0;
-
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
@@ -50,7 +50,7 @@ class _WheelPickerWidget extends State<WheelPickerWidget> {
                         ))
                     .toList(),
                 onSelectedItemChanged: (index) {
-                  setState(() => this.index = index);
+                  setState(() => {widget.controller.index = index});
                 },
               ),
             ),
@@ -96,7 +96,7 @@ class _WheelPickerWidget extends State<WheelPickerWidget> {
                       'Next',
                       style: TextStyle(fontSize: 24),
                     ),
-                    onPressed: () => widget.callback(index),
+                    onPressed: () => widget.callback(),
                   ),
                 ),
               ],
@@ -110,7 +110,7 @@ class _WheelPickerWidget extends State<WheelPickerWidget> {
                 'Next',
                 style: TextStyle(fontSize: 24),
               ),
-              onPressed: () => widget.callback(index),
+              onPressed: () => widget.callback(),
             ),
     );
   }

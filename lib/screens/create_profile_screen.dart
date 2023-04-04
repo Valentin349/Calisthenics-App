@@ -3,6 +3,7 @@ import 'package:calisthenics_app/utils.dart';
 import 'package:calisthenics_app/widgets/wheel_picker_widget.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../widgets/text_button_input_widget.dart';
@@ -18,16 +19,44 @@ class _CreateProfileScreen extends State<CreateProfileScreen> {
   final _navigatorKey = GlobalKey<NavigatorState>();
 
   final usernameController = TextEditingController();
-  int pushUpsController = 0;
-  int pullUpsController = 0;
-  int dipsController = 0;
-  int squatsController = 0;
+  final pushUpsController = CupertinoTabController();
+  final pullUpsController = CupertinoTabController();
+  final dipsController = CupertinoTabController();
+  final squatsController = CupertinoTabController();
   final formKey = GlobalKey<FormState>();
 
   CollectionReference users = FirebaseFirestore.instance.collection('users');
 
   String userID = FirebaseAuth.instance.currentUser!.uid;
   bool isUserCreated = false;
+
+  final pullUpChoices = const ['0-5', '5-10', '10-15', '15-20', '20-25', '25+'];
+  final squatChoices = const [
+    '0-10',
+    '10-20',
+    '20-30',
+    '30-40',
+    '40-50',
+    '50+'
+  ];
+  final dipChoices = const [
+    '0-5',
+    '5-10',
+    '10-15',
+    '15-20',
+    '20-25',
+    '25-30',
+    '30+'
+  ];
+  final pushupChoices = const [
+    '0-5',
+    '5-10',
+    '10-15',
+    '15-20',
+    '20-25',
+    '25-30',
+    '30+'
+  ];
 
   @override
   void dispose() {
@@ -92,16 +121,17 @@ class _CreateProfileScreen extends State<CreateProfileScreen> {
       final username = usernameController.text.trim();
       final query = users.where('username', isEqualTo: username);
 
+      // check if username got taken in the time account was created
       query.get().then((snapshot) => {
             if (snapshot.docs.isEmpty)
               {
                 userReference
                     .set({
                       'username': username,
-                      'PushUps': pushUpsController,
-                      'Dips': pushUpsController,
-                      'PullUps': pushUpsController,
-                      'Squats': pushUpsController,
+                      'PushUps': pushupChoices[pushUpsController.index],
+                      'Dips': dipChoices[dipsController.index],
+                      'PullUps': pullUpChoices[pullUpsController.index],
+                      'Squats': squatChoices[squatsController.index],
                     })
                     .then(
                       (snapshot) => {
@@ -129,19 +159,19 @@ class _CreateProfileScreen extends State<CreateProfileScreen> {
         });
   }
 
-  void _onPushupsSelected(int index) {
+  void _onPushupsSelected() {
     _navigatorKey.currentState!.pushNamed('dipsPage');
   }
 
-  void _onDipsSelected(int index) {
+  void _onDipsSelected() {
     _navigatorKey.currentState!.pushNamed('pullupsPage');
   }
 
-  void _onPullupsSelected(int index) {
+  void _onPullupsSelected() {
     _navigatorKey.currentState!.pushNamed('squatsPage');
   }
 
-  void _onSquatsSelected(int index) {
+  void _onSquatsSelected() {
     createUser();
   }
 
@@ -158,15 +188,8 @@ class _CreateProfileScreen extends State<CreateProfileScreen> {
         break;
       case 'pushupsPage':
         page = WheelPickerWidget(
-          items: const [
-            '0-5',
-            '5-10',
-            '10-15',
-            '15-20',
-            '20-25',
-            '25-30',
-            '30+'
-          ],
+          items: pushupChoices,
+          controller: pushUpsController,
           titleText: 'How many pushups can you do?',
           callback: _onPushupsSelected,
           backButton: true,
@@ -174,15 +197,8 @@ class _CreateProfileScreen extends State<CreateProfileScreen> {
         break;
       case 'dipsPage':
         page = WheelPickerWidget(
-          items: const [
-            '0-5',
-            '5-10',
-            '10-15',
-            '15-20',
-            '20-25',
-            '25-30',
-            '30+'
-          ],
+          items: dipChoices,
+          controller: dipsController,
           titleText: 'How many dips can you do?',
           callback: _onDipsSelected,
           backButton: true,
@@ -190,14 +206,8 @@ class _CreateProfileScreen extends State<CreateProfileScreen> {
         break;
       case 'pullupsPage':
         page = WheelPickerWidget(
-          items: const [
-            '0-5',
-            '5-10',
-            '10-15',
-            '15-20',
-            '20-25',
-            '25+',
-          ],
+          items: pullUpChoices,
+          controller: pullUpsController,
           titleText: 'How many pullups can you do?',
           callback: _onPullupsSelected,
           backButton: true,
@@ -205,7 +215,8 @@ class _CreateProfileScreen extends State<CreateProfileScreen> {
         break;
       case 'squatsPage':
         page = WheelPickerWidget(
-          items: const ['0-10', '10-20', '20-30', '30-40', '40-50', '50+'],
+          items: squatChoices,
+          controller: squatsController,
           titleText: 'How many squats can you do?',
           callback: _onSquatsSelected,
           backButton: true,
