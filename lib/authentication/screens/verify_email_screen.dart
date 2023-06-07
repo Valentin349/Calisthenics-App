@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:calisthenics_app/screens/create_profile_screen.dart';
+import 'package:calisthenics_app/profile_creation/screens/create_profile_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../../utils.dart';

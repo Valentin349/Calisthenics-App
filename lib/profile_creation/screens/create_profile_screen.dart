@@ -1,6 +1,6 @@
-import 'package:calisthenics_app/screens/home_screen.dart';
+import 'package:calisthenics_app/home/home_screen.dart';
 import 'package:calisthenics_app/utils.dart';
-import 'package:calisthenics_app/widgets/wheel_picker_widget.dart';
+import 'package:calisthenics_app/profile_creation/widgets/wheel_picker_widget.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';

@@ -1,7 +1,7 @@
-import 'package:calisthenics_app/widgets/login_widget.dart';
+import 'package:calisthenics_app/authentication/widgets/login_widget.dart';
 import 'package:flutter/cupertino.dart';
 
-import '../../widgets/signup_widget.dart';
+import '../widgets/signup_widget.dart';
 
 class AuthenticationScreen extends StatefulWidget {
   const AuthenticationScreen({super.key});
